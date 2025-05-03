@@ -1,10 +1,11 @@
-import { Container, Typography, Button, Box, TextField, Modal, Alert } from '@mui/material';
-import { Favorite } from '@mui/icons-material';
+import { Container, Typography, Button, Box, TextField, Modal, Alert, IconButton } from '@mui/material';
+import { Favorite, Close } from '@mui/icons-material';
 import ResponsiveAppBar from './components/NavBar';
 import { useState } from 'react';
 import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
 import medioRiesgo from '../Medio_Riesgo.json';
+import logoAura from './assets/logoAura.png';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -75,6 +76,7 @@ function App() {
             gap: 2
           }}
         >
+          <img src={logoAura} alt="Aura Logo" style={{ width: 120, marginBottom: 24 }} />
           <Typography variant="h2" component="h1" gutterBottom>
             Welcome to Aura
           </Typography>
@@ -132,6 +134,15 @@ function App() {
             borderRadius: 2,
           }}
         >
+          <Box sx={{ position: 'absolute', right: 8, top: 8 }}>
+            <IconButton
+              aria-label="close"
+              onClick={handleCloseModal}
+              sx={{ color: 'text.secondary' }}
+            >
+              <Close />
+            </IconButton>
+          </Box>
           <Typography id="verification-result-modal" variant="h6" component="h2" sx={{ mb: 2 }}>
             Verification Result
           </Typography>
