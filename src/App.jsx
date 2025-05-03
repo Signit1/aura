@@ -3,20 +3,67 @@ import { Favorite } from '@mui/icons-material';
 import ResponsiveAppBar from './components/NavBar';
 import { useState } from 'react';
 import blackList from '../blackList.json';
+import altoRiesgo from '../AltoRiesgo.json';
+import medioRiesgo from '../Medio_Riesgo.json';
+import bajoRiesgo from '../Bajo_Riesgo.json';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
+  const [riskLevel, setRiskLevel] = useState('');
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
+    const isInHighRisk = altoRiesgo.highRiskAddresses.includes(walletAddress);
+    const isInMediumRisk = medioRiesgo.mediumRiskAddresses.includes(walletAddress);
+    const isInLowRisk = bajoRiesgo.lowRiskAddresses.includes(walletAddress);
+
     setIsBlacklisted(isInBlacklist);
+    
+    if (isInBlacklist || isInHighRisk) {
+      setRiskLevel('high');
+    } else if (isInMediumRisk) {
+      setRiskLevel('medium');
+    } else if (isInLowRisk) {
+      setRiskLevel('low');
+    } else {
+      setRiskLevel('none');
+    }
+
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
+  };
+
+  const getRiskMessage = () => {
+    switch (riskLevel) {
+      case 'high':
+        return isBlacklisted 
+          ? 'This address is in the BLACKLIST and is considered HIGH RISK.' 
+          : 'This address is in the HIGH RISK list.';
+      case 'medium':
+        return 'This address is in the MEDIUM RISK list.';
+      case 'low':
+        return 'This address is in the LOW RISK list.';
+      default:
+        return 'This address is not in any risk list.';
+    }
+  };
+
+  const getRiskColor = () => {
+    switch (riskLevel) {
+      case 'high':
+        return '#ff0000'; // Red
+      case 'medium':
+        return '#ffa500'; // Orange
+      case 'low':
+        return '#00ff00'; // Green
+      default:
+        return '#4caf50'; // Default success green
+    }
   };
 
   return (
@@ -96,6 +143,18 @@ function App() {
             {isBlacklisted 
               ? "The wallet address is in the black list." 
               : "The wallet address is not in the black list."}
+          </Alert>
+          <Alert 
+            sx={{ 
+              mt: 2,
+              backgroundColor: getRiskColor(),
+              color: 'white',
+              '& .MuiAlert-icon': {
+                color: 'white'
+              }
+            }}
+          >
+            {getRiskMessage()}
           </Alert>
           <Button 
             variant="contained" 
