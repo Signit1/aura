@@ -5,7 +5,6 @@ import { useState } from 'react';
 import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
 import medioRiesgo from '../Medio_Riesgo.json';
-import bajoRiesgo from '../Bajo_Riesgo.json';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -17,7 +16,6 @@ function App() {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
     const isInHighRisk = altoRiesgo.highRiskAddresses.includes(walletAddress);
     const isInMediumRisk = medioRiesgo.mediumRiskAddresses.includes(walletAddress);
-    const isInLowRisk = bajoRiesgo.lowRiskAddresses.includes(walletAddress);
 
     setIsBlacklisted(isInBlacklist);
     
@@ -25,10 +23,8 @@ function App() {
       setRiskLevel('high');
     } else if (isInMediumRisk) {
       setRiskLevel('medium');
-    } else if (isInLowRisk) {
-      setRiskLevel('low');
     } else {
-      setRiskLevel('none');
+      setRiskLevel('low');
     }
 
     setOpenModal(true);
@@ -47,9 +43,9 @@ function App() {
       case 'medium':
         return 'This address is in the MEDIUM RISK list.';
       case 'low':
-        return 'This address is in the LOW RISK list.';
+        return 'This address is not in any risk list and is considered LOW RISK.';
       default:
-        return 'This address is not in any risk list.';
+        return 'This address is not in any risk list and is considered LOW RISK.';
     }
   };
 
@@ -60,9 +56,9 @@ function App() {
       case 'medium':
         return '#ffa500'; // Orange
       case 'low':
-        return '#00ff00'; // Green
+        return '#4caf50'; // Softer green
       default:
-        return '#4caf50'; // Default success green
+        return '#4caf50'; // Softer green for low risk
     }
   };
 
