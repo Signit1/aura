@@ -186,6 +186,7 @@ function App() {
     setConnectedAccount('');
     setIsWalletConnected(false);
     setWalletAddress('');
+    setConsultedAddresses([]);
   };
 
   const handleNavigate = (screen) => {
@@ -276,6 +277,8 @@ function App() {
                     onClick={() => {
                       setConnectedAccount('');
                       setIsWalletConnected(false);
+                      setWalletAddress('');
+                      setConsultedAddresses([]);
                     }}
                   >
                     {translations[language].disconnect}
