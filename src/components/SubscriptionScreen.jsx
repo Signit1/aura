@@ -20,12 +20,12 @@ const translations = {
     title: 'AURA Premium Subscription',
     monthly: {
       name: 'Monthly Plan',
-      price: '0.01 ETH',
+      price: '1 MXNB',
       button: 'Subscribe Monthly'
     },
     annual: {
       name: 'Annual Plan',
-      price: '0.1 ETH',
+      price: '10 MXNB',
       discount: 'Save 15%!',
       button: 'Subscribe Annual'
     },
@@ -37,12 +37,12 @@ const translations = {
     title: 'Suscripción Premium AURA',
     monthly: {
       name: 'Plan Mensual',
-      price: '0.01 ETH',
+      price: '1 MXNB',
       button: 'Suscribirse Mensual'
     },
     annual: {
       name: 'Plan Anual',
-      price: '0.1 ETH',
+      price: '10 MXNB',
       discount: '¡Ahorra 15%!',
       button: 'Suscribirse Anual'
     },
@@ -182,7 +182,7 @@ function SubscriptionScreen({ language = 'es', walletAddress: walletAddressProp,
                 {t.monthly.name}
               </Typography>
               <Typography variant="h4" color="primary" gutterBottom>
-                0.00001 ARB
+                {t.monthly.price}
               </Typography>
             </CardContent>
             <CardActions>
@@ -213,13 +213,18 @@ function SubscriptionScreen({ language = 'es', walletAddress: walletAddressProp,
                 color="success"
                 sx={{ mt: 1 }}
               />
+              <Chip
+                label={language === 'es' ? 'Próximamente' : 'Coming Soon'}
+                color="warning"
+                sx={{ mt: 1, ml: 1 }}
+              />
             </CardContent>
             <CardActions>
               <Button
                 fullWidth
                 variant="contained"
                 onClick={() => handleSubscribe('annual')}
-                disabled={isLoading || !walletAddress}
+                disabled={true}
               >
                 {t.annual.button}
               </Button>
