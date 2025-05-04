@@ -1,6 +1,4 @@
-¡Perfecto! Usando esa lista específica de tecnologías y el resumen, aquí tienes la plantilla actualizada para tu `README.md`. He integrado la información que proporcionaste directamente en las secciones correspondientes.
 
----
 
 ```markdown
 # AURA - Análisis Unificado de Riesgos y Alertas 🛡️
@@ -174,15 +172,3 @@ Este proyecto participa en los siguientes tracks del ETH Cinco de Mayo Hackathon
 *   **Bitso:** [Breve justificación: Ej. Integra token MXNB en contrato y flujo de suscripción.]
 *   **Mantle:** [Breve justificación: Ej. Tipo App Consumer/DeFi/AI (mencionar visión), potencial despliegue.]
 *   *[Añade/quita tracks según corresponda]*
-
----
-```
-
-**Cambios Realizados:**
-
-*   La **Descripción Corta** ahora se basa directamente en el resumen que proporcionaste.
-*   La sección **Tecnologías Utilizadas** lista exactamente las tecnologías que mencionaste, añadiendo detalles como Solidity y la red de despliegue.
-*   A lo largo del README, se **resaltan en negrita** las tecnologías clave (React, MUI, ethers.js, jsPDF, Smart Contract, Multi-idioma) cuando se menciona su funcionalidad, para reforzar su uso.
-*   Se añadieron referencias a Vite y Solidity donde correspondía.
-
-¡Recuerda completar toda la información entre corchetes `[...]` con tus datos específicos! Este README ahora refleja perfectamente la información que me diste.
