@@ -6,6 +6,11 @@
 
 *(Proyecto presentado para el ETH Cinco de Mayo Hackathon)*
 
+## SMART CONTRACTS ON ARBITRUM NETWORK
+
+SUBSCRIPTION_CONTRACT=0x7A5ba0c3aE9032cd86cDcea59eCaE5435Fb1a232
+MXNB_CONTRACT=0x82B9e52b26A2954E113F94Ff26647754d5a4247D
+
 ## Tabla de Contenidos
 
 *   [Descripción Corta](#descripción-corta)
