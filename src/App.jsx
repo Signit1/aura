@@ -21,6 +21,8 @@ import BlogPostWelcome from './components/BlogPostWelcome';
 import BlogPostScore from './components/BlogPostScore';
 import BlogPostAML from './components/BlogPostAML';
 import BlogPostDefs from './components/BlogPostDefs';
+import BlogPostFeatures from './components/BlogPostFeatures';
+import BlogPostHowItWorks from './components/BlogPostHowItWorks';
 
 const translations = {
   en: {
@@ -231,11 +233,13 @@ function App() {
       case 'about':
         return <AboutAuraScreen language={language} />;
       case 'blog':
-        if (currentBlogPost === 'welcome') return <BlogPostWelcome />;
-        if (currentBlogPost === 'score') return <BlogPostScore />;
-        if (currentBlogPost === 'aml') return <BlogPostAML />;
-        if (currentBlogPost === 'defs') return <BlogPostDefs />;
-        return <BlogList onPostClick={handleBlogPostClick} />;
+        if (currentBlogPost === 'welcome') return <BlogPostWelcome language={language} />;
+        if (currentBlogPost === 'score') return <BlogPostScore language={language} />;
+        if (currentBlogPost === 'aml') return <BlogPostAML language={language} />;
+        if (currentBlogPost === 'defs') return <BlogPostDefs language={language} />;
+        if (currentBlogPost === 'features') return <BlogPostFeatures language={language} />;
+        if (currentBlogPost === 'howitworks') return <BlogPostHowItWorks language={language} />;
+        return <BlogList onPostClick={handleBlogPostClick} language={language} />;
       case 'main':
       default:
         return (
