@@ -10,6 +10,10 @@ import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
 import medioRiesgo from '../Medio_Riesgo.json';
 import logoAura from './assets/logoAura.png';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
 
 const translations = {
   en: {
@@ -60,6 +64,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [currentScreen, setCurrentScreen] = useState('main');
   const [isOfac, setIsOfac] = useState(false);
+  const [consultedAddresses, setConsultedAddresses] = useState([]);
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
@@ -70,13 +75,37 @@ function App() {
     setIsBlacklisted(isInBlacklist || isInOfac);
     setIsOfac(isInOfac);
     
+    let risk = 'low';
     if (isInBlacklist || isInHighRisk || isInOfac) {
+      risk = 'high';
       setRiskLevel('high');
     } else if (isInMediumRisk) {
+      risk = 'medium';
       setRiskLevel('medium');
     } else {
       setRiskLevel('low');
     }
+
+    let statusMsg = '';
+    if (risk === 'high' && isInOfac) {
+      statusMsg = translations[language].highOfac;
+    } else if (risk === 'high' && (isInBlacklist || isInHighRisk)) {
+      statusMsg = isInBlacklist ? translations[language].highBlack : translations[language].high;
+    } else if (risk === 'medium') {
+      statusMsg = translations[language].medium;
+    } else {
+      statusMsg = translations[language].low;
+    }
+
+    setConsultedAddresses(prev => [
+      {
+        address: walletAddress,
+        risk,
+        statusMsg,
+        color: risk === 'high' ? '#ff0000' : risk === 'medium' ? '#ffa500' : '#4caf50'
+      },
+      ...prev
+    ]);
 
     setOpenModal(true);
   };
@@ -229,6 +258,34 @@ function App() {
                 >
                   {translations[language].verify}
                 </Button>
+                {consultedAddresses.length > 0 && (
+                  <Box sx={{ mt: 3 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                      {language === 'es' ? 'Direcciones consultadas:' : 'Consulted addresses:'}
+                    </Typography>
+                    <List dense>
+                      {consultedAddresses.map((item, idx) => (
+                        <ListItem key={item.address + idx} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <ListItemText
+                            primary={item.address}
+                            secondary={item.statusMsg}
+                            primaryTypographyProps={{ style: { fontWeight: 500 } }}
+                          />
+                          <Chip
+                            label={
+                              item.risk === 'high'
+                                ? (language === 'es' ? 'Alto' : 'High')
+                                : item.risk === 'medium'
+                                  ? (language === 'es' ? 'Medio' : 'Medium')
+                                  : (language === 'es' ? 'Bajo' : 'Low')
+                            }
+                            sx={{ backgroundColor: item.color, color: 'white', fontWeight: 'bold' }}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                )}
               </Box>
             </Box>
           </Container>
