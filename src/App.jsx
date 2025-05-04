@@ -1,6 +1,7 @@
 import { Container, Typography, Button, Box, TextField, Modal, Alert, IconButton } from '@mui/material';
 import { Favorite, Close } from '@mui/icons-material';
 import ResponsiveAppBar from './components/NavBar';
+import Login from './components/Login';
 import { useState } from 'react';
 import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
@@ -50,6 +51,8 @@ function App() {
   const [connectedAccount, setConnectedAccount] = useState('');
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [language, setLanguage] = useState('es');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
@@ -122,9 +125,31 @@ function App() {
     return address.slice(0, 6) + '...' + address.slice(-4);
   };
 
+  const handleLogin = (user) => {
+    setIsAuthenticated(true);
+    setUsername(user);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUsername('');
+    // Limpiar también el estado de la wallet al cerrar sesión
+    setConnectedAccount('');
+    setIsWalletConnected(false);
+    setWalletAddress('');
+  };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} language={language} />;
+  }
+
   return (
     <>
-      <ResponsiveAppBar onLanguageChange={setLanguage} language={language} />
+      <ResponsiveAppBar 
+        onLanguageChange={setLanguage} 
+        language={language}
+        onLogout={handleLogout}
+      />
       <Container maxWidth="sm">
         <Box
           sx={{

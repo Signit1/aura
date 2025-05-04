@@ -40,10 +40,10 @@ const menuTranslations = {
   }
 };
 
-function ResponsiveAppBar({ onLanguageChange, language = 'es' }) {
+function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
   const t = menuTranslations[language];
   const pages = [t.products, t.pricing, t.blog];
-  const settings = [t.profile, t.account, t.dashboard, t.logout, t.spanish, t.english];
+  const settings = [t.profile, t.account, t.dashboard, t.spanish, t.english, t.logout];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -66,6 +66,7 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es' }) {
   const handleMenuItemClick = (setting) => {
     if (setting === t.spanish) onLanguageChange('es');
     else if (setting === t.english) onLanguageChange('en');
+    else if (setting === t.logout) onLogout();
     handleCloseUserMenu();
   };
 
