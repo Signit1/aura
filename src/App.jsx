@@ -230,7 +230,7 @@ function App() {
   const renderMainContent = () => {
     switch (currentScreen) {
       case 'subscription':
-        return <SubscriptionScreen language={language} />;
+        return <SubscriptionScreen language={language} walletAddress={connectedAccount} contractAddress={import.meta.env.VITE_SUBSCRIPTION_CONTRACT} />;
       case 'about':
         return <AboutAuraScreen language={language} />;
       case 'blog':

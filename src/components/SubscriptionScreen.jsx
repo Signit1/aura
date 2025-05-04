@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -12,6 +12,8 @@ import {
   Alert,
   Chip
 } from '@mui/material';
+import { ethers } from 'ethers';
+import contractABI from '../contracts/SubscriptionContract.abi.json';
 
 const translations = {
   en: {
@@ -50,23 +52,90 @@ const translations = {
   }
 };
 
-function SubscriptionScreen({ language = 'es' }) {
+function SubscriptionScreen({ language = 'es', walletAddress: walletAddressProp, contractAddress }) {
   const [isLoading, setIsLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('success');
+  const [walletAddress, setWalletAddress] = useState(walletAddressProp || '');
+  const [walletChecked, setWalletChecked] = useState(false);
   const t = translations[language];
 
-  const handleSubscribe = (planType) => {
+  useEffect(() => {
+    async function checkWallet() {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+        }
+      } else {
+        setAlertMessage('No crypto wallet found. Please install MetaMask or a compatible wallet.');
+        setAlertSeverity('error');
+      }
+      setWalletChecked(true);
+    }
+    checkWallet();
+  }, []);
+
+  const handleConnectWallet = async () => {
+    if (!window.ethereum) {
+      setAlertMessage('No crypto wallet found. Please install MetaMask or a compatible wallet.');
+      setAlertSeverity('error');
+      return;
+    }
+    try {
+      const reqAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (reqAccounts.length > 0) {
+        setWalletAddress(reqAccounts[0]);
+        setAlertMessage('');
+      }
+    } catch (err) {
+      setAlertMessage(language === 'es' ? 'Conexión rechazada por el usuario.' : 'Connection rejected by user.');
+      setAlertSeverity('warning');
+    }
+  };
+
+  const handleSubscribe = async (planType) => {
     setIsLoading(true);
     setAlertMessage('');
-    
-    // Simular una operación asíncrona
-    setTimeout(() => {
-      console.log(`Subscribing to ${planType} plan`);
+    if (!contractAddress) {
+      setAlertMessage(language === 'es'
+        ? 'Dirección del contrato no configurada.'
+        : 'Contract address not set.');
+      setAlertSeverity('error');
       setIsLoading(false);
+      return;
+    }
+    try {
+      if (!window.ethereum) throw new Error('No crypto wallet found');
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      let value;
+      let planTypeNum;
+      if (planType === 'monthly') {
+        value = ethers.utils.parseEther('0.00001');
+        planTypeNum = 1;
+      } else if (planType === 'annual') {
+        value = ethers.utils.parseEther('0.0001');
+        planTypeNum = 2;
+      } else {
+        throw new Error('Invalid plan type');
+      }
+      // Call subscribe
+      const tx = await contract.subscribe(planTypeNum, { value });
+      await tx.wait();
       setAlertMessage(t.success);
       setAlertSeverity('success');
-    }, 1500);
+      // Call getSubscriber
+      const subscriber = await contract.getSubscriber(walletAddress);
+      console.log('Subscriber info:', subscriber);
+    } catch (err) {
+      setAlertMessage(t.error);
+      setAlertSeverity('error');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -74,6 +143,20 @@ function SubscriptionScreen({ language = 'es' }) {
       <Typography variant="h4" component="h1" align="center" gutterBottom>
         {t.title}
       </Typography>
+
+      {/* Connect Wallet Button */}
+      {!walletAddress && walletChecked && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConnectWallet}
+            size="large"
+          >
+            {language === 'es' ? 'Conectar Wallet' : 'Connect Wallet'}
+          </Button>
+        </Box>
+      )}
 
       <Grid container spacing={4} sx={{ mt: 2 }}>
         {/* Plan Mensual */}
@@ -84,7 +167,7 @@ function SubscriptionScreen({ language = 'es' }) {
                 {t.monthly.name}
               </Typography>
               <Typography variant="h4" color="primary" gutterBottom>
-                {t.monthly.price}
+                0.00001 ARB
               </Typography>
             </CardContent>
             <CardActions>
@@ -92,7 +175,7 @@ function SubscriptionScreen({ language = 'es' }) {
                 fullWidth
                 variant="contained"
                 onClick={() => handleSubscribe('monthly')}
-                disabled={isLoading}
+                disabled={isLoading || !walletAddress}
               >
                 {t.monthly.button}
               </Button>
@@ -121,7 +204,7 @@ function SubscriptionScreen({ language = 'es' }) {
                 fullWidth
                 variant="contained"
                 onClick={() => handleSubscribe('annual')}
-                disabled={isLoading}
+                disabled={isLoading || !walletAddress}
               >
                 {t.annual.button}
               </Button>
@@ -141,6 +224,11 @@ function SubscriptionScreen({ language = 'es' }) {
         {alertMessage && (
           <Alert severity={alertSeverity} sx={{ width: '100%', maxWidth: 600 }}>
             {alertMessage}
+          </Alert>
+        )}
+        {!walletAddress && walletChecked && !isLoading && (
+          <Alert severity="warning" sx={{ width: '100%', maxWidth: 600 }}>
+            {language === 'es' ? 'Por favor conecta tu wallet para suscribirte.' : 'Please connect your wallet to subscribe.'}
           </Alert>
         )}
       </Box>
