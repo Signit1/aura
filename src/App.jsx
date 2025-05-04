@@ -2,6 +2,7 @@ import { Container, Typography, Button, Box, TextField, Modal, Alert, IconButton
 import { Favorite, Close } from '@mui/icons-material';
 import ResponsiveAppBar from './components/NavBar';
 import Login from './components/Login';
+import SubscriptionScreen from './components/SubscriptionScreen';
 import { useState } from 'react';
 import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
@@ -53,6 +54,7 @@ function App() {
   const [language, setLanguage] = useState('es');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
+  const [currentScreen, setCurrentScreen] = useState('main');
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
@@ -139,9 +141,88 @@ function App() {
     setWalletAddress('');
   };
 
+  const handleNavigate = (screen) => {
+    setCurrentScreen(screen);
+  };
+
   if (!isAuthenticated) {
     return <Login onLogin={handleLogin} language={language} onLanguageChange={setLanguage} />;
   }
+
+  const renderMainContent = () => {
+    switch (currentScreen) {
+      case 'subscription':
+        return <SubscriptionScreen language={language} />;
+      case 'main':
+      default:
+        return (
+          <Container maxWidth="sm">
+            <Box
+              sx={{
+                my: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2
+              }}
+            >
+              {/* <img src={logoAura} alt="Aura Logo" style={{ width: 200, marginBottom: 24 }} /> */}
+              <Button
+                variant="contained"
+                color={isWalletConnected ? 'success' : 'primary'}
+                sx={{ mb: 2 }}
+                onClick={handleConnectWallet}
+                disabled={isWalletConnected}
+              >
+                {isWalletConnected ? translations[language].connected : translations[language].connect}
+              </Button>
+              {isWalletConnected && (
+                <>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    {shortenAddress(connectedAccount)}
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    sx={{ mb: 2 }}
+                    onClick={() => {
+                      setConnectedAccount('');
+                      setIsWalletConnected(false);
+                    }}
+                  >
+                    {translations[language].disconnect}
+                  </Button>
+                </>
+              )}
+              <Box sx={{ width: '100%', mt: 2 }}>
+                <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
+                  {translations[language].addressToAnalyze}
+                </Typography>
+                <TextField
+                  fullWidth
+                  label={translations[language].walletAddress}
+                  variant="outlined"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  placeholder="0x..."
+                  sx={{ mb: 2 }}
+                />
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSubmit}
+                  size="large"
+                  disabled={!isWalletConnected || !walletAddress}
+                >
+                  {translations[language].verify}
+                </Button>
+              </Box>
+            </Box>
+          </Container>
+        );
+    }
+  };
 
   return (
     <>
@@ -149,71 +230,9 @@ function App() {
         onLanguageChange={setLanguage} 
         language={language}
         onLogout={handleLogout}
+        onNavigate={handleNavigate}
       />
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            my: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 2
-          }}
-        >
-          {/* <img src={logoAura} alt="Aura Logo" style={{ width: 200, marginBottom: 24 }} /> */}
-          <Button
-            variant="contained"
-            color={isWalletConnected ? 'success' : 'primary'}
-            sx={{ mb: 2 }}
-            onClick={handleConnectWallet}
-            disabled={isWalletConnected}
-          >
-            {isWalletConnected ? translations[language].connected : translations[language].connect}
-          </Button>
-          {isWalletConnected && (
-            <>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                {shortenAddress(connectedAccount)}
-              </Typography>
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ mb: 2 }}
-                onClick={() => {
-                  setConnectedAccount('');
-                  setIsWalletConnected(false);
-                }}
-              >
-                {translations[language].disconnect}
-              </Button>
-            </>
-          )}
-          <Box sx={{ width: '100%', mt: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-              {translations[language].addressToAnalyze}
-            </Typography>
-            <TextField
-              fullWidth
-              label={translations[language].walletAddress}
-              variant="outlined"
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-              placeholder="0x..."
-              sx={{ mb: 2 }}
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              onClick={handleSubmit}
-              size="large"
-              disabled={!isWalletConnected || !walletAddress}
-            >
-              {translations[language].verify}
-            </Button>
-          </Box>
-        </Box>
-      </Container>
+      {renderMainContent()}
 
       <Modal
         open={openModal}

@@ -40,7 +40,7 @@ const menuTranslations = {
   }
 };
 
-function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
+function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavigate }) {
   const t = menuTranslations[language];
   const pages = [t.products, t.pricing, t.blog];
   const settings = [t.profile, t.account, t.dashboard, t.spanish, t.english, t.logout];
@@ -51,6 +51,7 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -70,14 +71,47 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
     handleCloseUserMenu();
   };
 
+  const handlePageClick = (page) => {
+    if (page === t.pricing) {
+      onNavigate('subscription');
+    }
+    handleCloseNavMenu();
+  };
+
+  const handleLogoClick = () => {
+    onNavigate('main');
+  };
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#0a1929', color: '#fff' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 2 }}>
+          <Box 
+            sx={{ 
+              display: { xs: 'none', md: 'flex' }, 
+              alignItems: 'center', 
+              mr: 2,
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.8
+              }
+            }}
+            onClick={handleLogoClick}
+          >
             <img src={logoAura} alt="Aura Logo" style={{ height: 100 }} />
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+          <Box 
+            sx={{ 
+              flexGrow: 1, 
+              display: { xs: 'flex', md: 'none' }, 
+              alignItems: 'center',
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.8
+              }
+            }}
+            onClick={handleLogoClick}
+          >
             <img src={logoAura} alt="Aura Logo" style={{ height: 48, marginRight: 8 }} />
             <IconButton
               size="large"
@@ -89,12 +123,36 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
             >
               <MenuIcon />
             </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={() => handlePageClick(page)}>
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handlePageClick(page)}
                 sx={{ my: 2, color: '#fff', display: 'block' }}
               >
                 {page}
@@ -135,4 +193,5 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout }) {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
