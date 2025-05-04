@@ -80,6 +80,8 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavig
       onNavigate('subscription');
     } else if (page === t.products) {
       onNavigate('about');
+    } else if (page === t.blog) {
+      onNavigate('blog');
     }
     handleCloseNavMenu();
   };
@@ -104,7 +106,7 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavig
             }}
             onClick={handleLogoClick}
           >
-            <img src={logoAura} alt="Aura Logo" style={{ height: 100 }} />
+            <img src={logoAura} alt="Aura Logo" style={{ height: 140 }} />
           </Box>
           <Box 
             sx={{ 
@@ -118,7 +120,7 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavig
             }}
             onClick={handleLogoClick}
           >
-            <img src={logoAura} alt="Aura Logo" style={{ height: 48, marginRight: 8 }} />
+            <img src={logoAura} alt="Aura Logo" style={{ height: 72, marginRight: 8 }} />
             <IconButton
               size="large"
               aria-label="account of current user"

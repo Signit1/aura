@@ -14,6 +14,13 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Chip from '@mui/material/Chip';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import jsPDF from 'jspdf';
+import BlogList from './components/BlogList';
+import BlogPostWelcome from './components/BlogPostWelcome';
+import BlogPostScore from './components/BlogPostScore';
+import BlogPostAML from './components/BlogPostAML';
+import BlogPostDefs from './components/BlogPostDefs';
 
 const translations = {
   en: {
@@ -65,6 +72,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('main');
   const [isOfac, setIsOfac] = useState(false);
   const [consultedAddresses, setConsultedAddresses] = useState([]);
+  const [currentBlogPost, setCurrentBlogPost] = useState(null);
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
@@ -179,7 +187,37 @@ function App() {
   };
 
   const handleNavigate = (screen) => {
+    if (screen === 'blog') {
+      setCurrentBlogPost(null);
+    }
     setCurrentScreen(screen);
+  };
+
+  // Blog post selection handler
+  const handleBlogPostClick = (key) => {
+    setCurrentBlogPost(key);
+  };
+
+  // PDF generation handler
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(language === 'es' ? 'Reporte de Direcciones Consultadas' : 'Consulted Addresses Report', 10, 15);
+    doc.setFontSize(12);
+    let y = 30;
+    consultedAddresses.forEach((item, idx) => {
+      doc.text(`${idx + 1}. ${item.address}`, 10, y);
+      y += 7;
+      doc.text((language === 'es' ? 'Estatus: ' : 'Status: ') + item.statusMsg, 15, y);
+      y += 7;
+      doc.text((language === 'es' ? 'Riesgo: ' : 'Risk: ') + (item.risk === 'high' ? (language === 'es' ? 'Alto' : 'High') : item.risk === 'medium' ? (language === 'es' ? 'Medio' : 'Medium') : (language === 'es' ? 'Bajo' : 'Low')), 15, y);
+      y += 10;
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+    doc.save('wallet_report.pdf');
   };
 
   if (!isAuthenticated) {
@@ -192,6 +230,12 @@ function App() {
         return <SubscriptionScreen language={language} />;
       case 'about':
         return <AboutAuraScreen language={language} />;
+      case 'blog':
+        if (currentBlogPost === 'welcome') return <BlogPostWelcome />;
+        if (currentBlogPost === 'score') return <BlogPostScore />;
+        if (currentBlogPost === 'aml') return <BlogPostAML />;
+        if (currentBlogPost === 'defs') return <BlogPostDefs />;
+        return <BlogList onPostClick={handleBlogPostClick} />;
       case 'main':
       default:
         return (
@@ -284,6 +328,15 @@ function App() {
                         </ListItem>
                       ))}
                     </List>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<PictureAsPdfIcon />}
+                      sx={{ mt: 2 }}
+                      onClick={handleGeneratePDF}
+                    >
+                      {language === 'es' ? 'Generar PDF' : 'Generate PDF'}
+                    </Button>
                   </Box>
                 )}
               </Box>
