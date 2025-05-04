@@ -1,6 +1,3 @@
-
-
-```markdown
 # AURA - Análisis Unificado de Riesgos y Alertas 🛡️
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!-- O la licencia que elijas -->
