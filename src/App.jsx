@@ -7,11 +7,49 @@ import altoRiesgo from '../AltoRiesgo.json';
 import medioRiesgo from '../Medio_Riesgo.json';
 import logoAura from './assets/logoAura.png';
 
+const translations = {
+  en: {
+    connect: 'Connect Wallet',
+    connected: 'Wallet Connected',
+    disconnect: 'Disconnect Wallet',
+    addressToAnalyze: 'Address to Analyze',
+    verify: 'Verify Wallet Address',
+    blacklist: 'The wallet address is in the black list.',
+    notBlacklist: 'The wallet address is not in the black list.',
+    high: 'This address is in the HIGH RISK list.',
+    highBlack: 'This address is in the BLACKLIST and is considered HIGH RISK.',
+    medium: 'This address is in the MEDIUM RISK list.',
+    low: 'This address is not in any risk list and is considered LOW RISK.',
+    walletAddress: 'Wallet Address',
+    verificationResult: 'Verification Result',
+    close: 'Close'
+  },
+  es: {
+    connect: 'Conectar Wallet',
+    connected: 'Wallet Conectada',
+    disconnect: 'Desconectar Wallet',
+    addressToAnalyze: 'Dirección a Analizar',
+    verify: 'Verificar Dirección de Wallet',
+    blacklist: 'La dirección está en la lista negra.',
+    notBlacklist: 'La dirección no está en la lista negra.',
+    high: 'Esta dirección está en la lista de ALTO RIESGO.',
+    highBlack: 'Esta dirección está en la LISTA NEGRA y es de ALTO RIESGO.',
+    medium: 'Esta dirección está en la lista de MEDIO RIESGO.',
+    low: 'Esta dirección no está en ninguna lista y es de BAJO RIESGO.',
+    walletAddress: 'Dirección de Wallet',
+    verificationResult: 'Resultado de Verificación',
+    close: 'Cerrar'
+  }
+};
+
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const [riskLevel, setRiskLevel] = useState('');
+  const [connectedAccount, setConnectedAccount] = useState('');
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [language, setLanguage] = useState('es');
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
@@ -63,9 +101,30 @@ function App() {
     }
   };
 
+  const handleConnectWallet = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts.length > 0) {
+          setConnectedAccount(accounts[0]);
+          setIsWalletConnected(true);
+        }
+      } catch (error) {
+        console.error('User rejected connection or error:', error);
+      }
+    } else {
+      alert('MetaMask no está instalado.');
+    }
+  };
+
+  const shortenAddress = (address) => {
+    if (!address) return '';
+    return address.slice(0, 6) + '...' + address.slice(-4);
+  };
+
   return (
     <>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar onLanguageChange={setLanguage} language={language} />
       <Container maxWidth="sm">
         <Box
           sx={{
@@ -76,26 +135,41 @@ function App() {
             gap: 2
           }}
         >
-          <img src={logoAura} alt="Aura Logo" style={{ width: 120, marginBottom: 24 }} />
-          <Typography variant="h2" component="h1" gutterBottom>
-            Welcome to Aura
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Your React application with Material UI is ready!
-          </Typography>
+          {/* <img src={logoAura} alt="Aura Logo" style={{ width: 200, marginBottom: 24 }} /> */}
           <Button
             variant="contained"
-            color="primary"
-            startIcon={<Favorite />}
-            size="large"
+            color={isWalletConnected ? 'success' : 'primary'}
+            sx={{ mb: 2 }}
+            onClick={handleConnectWallet}
+            disabled={isWalletConnected}
           >
-            Get Started
+            {isWalletConnected ? translations[language].connected : translations[language].connect}
           </Button>
-
+          {isWalletConnected && (
+            <>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                {shortenAddress(connectedAccount)}
+              </Typography>
+              <Button
+                variant="outlined"
+                color="error"
+                sx={{ mb: 2 }}
+                onClick={() => {
+                  setConnectedAccount('');
+                  setIsWalletConnected(false);
+                }}
+              >
+                {translations[language].disconnect}
+              </Button>
+            </>
+          )}
           <Box sx={{ width: '100%', mt: 2 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
+              {translations[language].addressToAnalyze}
+            </Typography>
             <TextField
               fullWidth
-              label="Wallet Address"
+              label={translations[language].walletAddress}
               variant="outlined"
               value={walletAddress}
               onChange={(e) => setWalletAddress(e.target.value)}
@@ -108,8 +182,9 @@ function App() {
               color="secondary"
               onClick={handleSubmit}
               size="large"
+              disabled={!isWalletConnected || !walletAddress}
             >
-              Verify Wallet Address
+              {translations[language].verify}
             </Button>
           </Box>
         </Box>
@@ -144,12 +219,12 @@ function App() {
             </IconButton>
           </Box>
           <Typography id="verification-result-modal" variant="h6" component="h2" sx={{ mb: 2 }}>
-            Verification Result
+            {translations[language].verificationResult}
           </Typography>
           <Alert severity={isBlacklisted ? "error" : "success"} sx={{ mt: 2 }}>
             {isBlacklisted 
-              ? "The wallet address is in the black list." 
-              : "The wallet address is not in the black list."}
+              ? translations[language].blacklist
+              : translations[language].notBlacklist}
           </Alert>
           <Alert 
             sx={{ 
@@ -161,14 +236,20 @@ function App() {
               }
             }}
           >
-            {getRiskMessage()}
+            {riskLevel === 'high' && isBlacklisted
+              ? translations[language].highBlack
+              : riskLevel === 'high'
+                ? translations[language].high
+                : riskLevel === 'medium'
+                  ? translations[language].medium
+                  : translations[language].low}
           </Alert>
           <Button 
             variant="contained" 
             onClick={handleCloseModal} 
             sx={{ mt: 2, width: '100%' }}
           >
-            Close
+            {translations[language].close}
           </Button>
         </Box>
       </Modal>

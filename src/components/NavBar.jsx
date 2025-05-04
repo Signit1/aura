@@ -11,12 +11,40 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import logoAura from '../assets/logoAura.png';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const menuTranslations = {
+  en: {
+    products: 'Products',
+    pricing: 'Pricing',
+    blog: 'Blog',
+    profile: 'Profile',
+    account: 'Account',
+    dashboard: 'Dashboard',
+    logout: 'Logout',
+    settings: 'Open settings',
+    spanish: 'Spanish',
+    english: 'English'
+  },
+  es: {
+    products: 'Productos',
+    pricing: 'Precios',
+    blog: 'Blog',
+    profile: 'Perfil',
+    account: 'Cuenta',
+    dashboard: 'Panel',
+    logout: 'Cerrar Sesión',
+    settings: 'Abrir configuración',
+    spanish: 'Español',
+    english: 'Inglés'
+  }
+};
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ onLanguageChange, language = 'es' }) {
+  const t = menuTranslations[language];
+  const pages = [t.products, t.pricing, t.blog];
+  const settings = [t.profile, t.account, t.dashboard, t.logout, t.spanish, t.english];
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -35,30 +63,21 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleMenuItemClick = (setting) => {
+    if (setting === t.spanish) onLanguageChange('es');
+    else if (setting === t.english) onLanguageChange('en');
+    handleCloseUserMenu();
+  };
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#0a1929', color: '#fff' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 2 }}>
+            <img src={logoAura} alt="Aura Logo" style={{ height: 100 }} />
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+            <img src={logoAura} alt="Aura Logo" style={{ height: 48, marginRight: 8 }} />
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -69,63 +88,22 @@ function ResponsiveAppBar() {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: '#fff', display: 'block' }}
               >
                 {page}
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title={t.settings}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User Avatar" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -145,7 +123,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleMenuItemClick(setting)}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}
