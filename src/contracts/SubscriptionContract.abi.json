@@ -1,208 +1,86 @@
 [
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "subscriber",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "decimals",
+		"outputs": [
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
 				"type": "address"
 			},
 			{
-				"indexed": false,
-				"internalType": "enum SubscriptionContract.Plan",
-				"name": "plan",
-				"type": "uint8"
-			},
-			{
-				"indexed": false,
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "paidAt",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "expiresAt",
-				"type": "uint256"
 			}
 		],
-		"name": "Subscribed",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "ANNUAL_PRICE",
+		"name": "transfer",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "bool",
 				"name": "",
-				"type": "uint256"
+				"type": "bool"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MONTH",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MONTHLY_PRICE",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "YEAR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			}
-		],
-		"name": "getSubscriber",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "subscriber",
-						"type": "address"
-					},
-					{
-						"internalType": "enum SubscriptionContract.Plan",
-						"name": "plan",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountPaid",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "paidAt",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "expiresAt",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct SubscriptionContract.SubscriberInfo",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "enum SubscriptionContract.Plan",
-				"name": "planType",
-				"type": "uint8"
-			}
-		],
-		"name": "subscribe",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "subscribers",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "subscriber",
+				"name": "from",
 				"type": "address"
 			},
 			{
-				"internalType": "enum SubscriptionContract.Plan",
-				"name": "plan",
-				"type": "uint8"
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "amountPaid",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "paidAt",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "expiresAt",
+				"name": "amount",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
