@@ -3,6 +3,7 @@ import { Favorite, Close } from '@mui/icons-material';
 import ResponsiveAppBar from './components/NavBar';
 import Login from './components/Login';
 import SubscriptionScreen from './components/SubscriptionScreen';
+import AboutAuraScreen from './components/AboutAuraScreen';
 import { useState } from 'react';
 import blackList from '../blackList.json';
 import altoRiesgo from '../AltoRiesgo.json';
@@ -130,6 +131,7 @@ function App() {
   const handleLogin = (user) => {
     setIsAuthenticated(true);
     setUsername(user);
+    setCurrentScreen('main');
   };
 
   const handleLogout = () => {
@@ -153,6 +155,8 @@ function App() {
     switch (currentScreen) {
       case 'subscription':
         return <SubscriptionScreen language={language} />;
+      case 'about':
+        return <AboutAuraScreen language={language} />;
       case 'main':
       default:
         return (

@@ -15,9 +15,10 @@ import logoAura from '../assets/logoAura.png';
 
 const menuTranslations = {
   en: {
-    products: 'Products',
+    products: 'About AURA',
     pricing: 'Subscription',
     blog: 'Blog',
+    connect: 'Connect Wallet',
     profile: 'Profile',
     account: 'Account',
     dashboard: 'Dashboard',
@@ -27,9 +28,10 @@ const menuTranslations = {
     english: 'English'
   },
   es: {
-    products: 'Productos',
+    products: 'Acerca de AURA',
     pricing: 'Suscripción',
     blog: 'Blog',
+    connect: 'Conectar Wallet',
     profile: 'Perfil',
     account: 'Cuenta',
     dashboard: 'Panel',
@@ -42,7 +44,7 @@ const menuTranslations = {
 
 function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavigate }) {
   const t = menuTranslations[language];
-  const pages = [t.products, t.pricing, t.blog];
+  const pages = [t.connect, t.products, t.pricing, t.blog];
   const settings = [t.profile, t.account, t.dashboard, t.spanish, t.english, t.logout];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -72,8 +74,12 @@ function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavig
   };
 
   const handlePageClick = (page) => {
-    if (page === t.pricing) {
+    if (page === t.connect) {
+      onNavigate('main');
+    } else if (page === t.pricing) {
       onNavigate('subscription');
+    } else if (page === t.products) {
+      onNavigate('about');
     }
     handleCloseNavMenu();
   };
