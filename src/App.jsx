@@ -1,5 +1,6 @@
 import { Container, Typography, Button, Box, TextField, Modal, Alert, IconButton } from '@mui/material';
 import { Favorite, Close } from '@mui/icons-material';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ResponsiveAppBar from './components/NavBar';
 import Login from './components/Login';
 import SubscriptionScreen from './components/SubscriptionScreen';
@@ -21,6 +22,7 @@ const translations = {
     notBlacklist: 'The wallet address is not in the black list.',
     high: 'This address is in the HIGH RISK list.',
     highBlack: 'This address is in the BLACKLIST and is considered HIGH RISK.',
+    highOfac: 'This address is in the OFAC list, is in the BLACKLIST, and is considered HIGH RISK.',
     medium: 'This address is in the MEDIUM RISK list.',
     low: 'This address is not in any risk list and is considered LOW RISK.',
     walletAddress: 'Wallet Address',
@@ -37,6 +39,7 @@ const translations = {
     notBlacklist: 'La dirección no está en la lista negra.',
     high: 'Esta dirección está en la lista de ALTO RIESGO.',
     highBlack: 'Esta dirección está en la LISTA NEGRA y es de ALTO RIESGO.',
+    highOfac: 'Esta dirección está en la LISTA OFAC, está en la LISTA NEGRA y es de ALTO RIESGO.',
     medium: 'Esta dirección está en la lista de MEDIO RIESGO.',
     low: 'Esta dirección no está en ninguna lista y es de BAJO RIESGO.',
     walletAddress: 'Dirección de Wallet',
@@ -56,15 +59,18 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [currentScreen, setCurrentScreen] = useState('main');
+  const [isOfac, setIsOfac] = useState(false);
 
   const handleSubmit = () => {
     const isInBlacklist = blackList.blacklistedAddresses.includes(walletAddress);
     const isInHighRisk = altoRiesgo.highRiskAddresses.includes(walletAddress);
     const isInMediumRisk = medioRiesgo.mediumRiskAddresses.includes(walletAddress);
+    const isInOfac = altoRiesgo.ofacAddresses && altoRiesgo.ofacAddresses.includes(walletAddress);
 
-    setIsBlacklisted(isInBlacklist);
+    setIsBlacklisted(isInBlacklist || isInOfac);
+    setIsOfac(isInOfac);
     
-    if (isInBlacklist || isInHighRisk) {
+    if (isInBlacklist || isInHighRisk || isInOfac) {
       setRiskLevel('high');
     } else if (isInMediumRisk) {
       setRiskLevel('medium');
@@ -177,6 +183,7 @@ function App() {
                 sx={{ mb: 2 }}
                 onClick={handleConnectWallet}
                 disabled={isWalletConnected}
+                startIcon={<AccountBalanceWalletIcon />}
               >
                 {isWalletConnected ? translations[language].connected : translations[language].connect}
               </Button>
@@ -210,6 +217,7 @@ function App() {
                   onChange={(e) => setWalletAddress(e.target.value)}
                   placeholder="0x..."
                   sx={{ mb: 2 }}
+                  disabled={!isWalletConnected}
                 />
                 <Button
                   fullWidth
@@ -284,13 +292,15 @@ function App() {
               }
             }}
           >
-            {riskLevel === 'high' && isBlacklisted
-              ? translations[language].highBlack
-              : riskLevel === 'high'
-                ? translations[language].high
-                : riskLevel === 'medium'
-                  ? translations[language].medium
-                  : translations[language].low}
+            {riskLevel === 'high' && isOfac
+              ? translations[language].highOfac
+              : riskLevel === 'high' && isBlacklisted
+                ? translations[language].highBlack
+                : riskLevel === 'high'
+                  ? translations[language].high
+                  : riskLevel === 'medium'
+                    ? translations[language].medium
+                    : translations[language].low}
           </Alert>
           <Button 
             variant="contained" 

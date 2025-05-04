@@ -44,7 +44,7 @@ const menuTranslations = {
 
 function ResponsiveAppBar({ onLanguageChange, language = 'es', onLogout, onNavigate }) {
   const t = menuTranslations[language];
-  const pages = [t.connect, t.products, t.pricing, t.blog];
+  const pages = [t.products, t.connect, t.pricing, t.blog];
   const settings = [t.profile, t.account, t.dashboard, t.spanish, t.english, t.logout];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);

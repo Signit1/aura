@@ -18,19 +18,20 @@ import LanguageIcon from '@mui/icons-material/Language';
 
 const translations = {
   en: {
-    title: 'About AURA',
+    title: 'What is AURA?',
     subtitle: 'Your Guardian in the Crypto World!',
-    whatIsAura: {
-      title: 'What is AURA?',
-      text: 'Hello! We are AURA (Unified Risk Analysis and Alerts). We were born at the ETH Cinco de Mayo Hackathon with a clear mission: to make navigating the cryptocurrency world safer for everyone.',
-      vision: 'Our Vision: We want to become an intelligent tool (yes, with AI in the future!) that proactively protects you against money laundering and scams in the blockchain ecosystem.',
-      thanks: 'Thank you for trying AURA! Your security is our priority.'
-    },
-    mission: {
-      title: 'Our Mission',
-      text: 'We know that Web3 is exciting, but it can also be risky. Have you ever wondered if the wallet you\'re about to interact with has funds of dubious origin? That\'s where we come in!',
-      whatWeDo: 'What do we do (in this prototype)? We analyze wallet addresses looking for connections with known risk activities (such as mixers or sanctioned addresses, using simulated data in this test version). We give you a simple and visual signal (our traffic light 🟢🟡🔴) to help you make more informed decisions before making a transaction.'
-    },
+    aboutAuraParagraphs: [
+      `Hello! We are AURA (Unified Risk Analysis and Alerts). We were born at the ETH Cinco de Mayo Hackathon with a clear mission: to make navigating the world of cryptocurrencies safer for everyone.`,
+      `We know Web3 is exciting, but it can also be risky. Have you ever wondered if the wallet you're about to interact with has dubious funds or is linked to illicit activities? That's where we come in!`,
+      `What do we do (in this prototype)?`,
+      `Deep Analysis: We review the address you provide, searching for connections to risky activities. This includes checking against reference lists that simulate addresses blocked or sanctioned by authorities.`,
+      `Activity Evaluation: We don't just look at lists; we also consider basic account interaction patterns that could indicate suspicious behavior.`,
+      `Clear Signal: We combine these factors to generate our risk traffic light (🟢🟡🔴). A simple visual signal that tells you if the detected risk is Low, Medium, or High, helping you make more informed decisions before interacting.`,
+      `(In this hackathon test version, the lists and activity analysis are simplified/simulated).`,
+      `Our Mission: To empower users and platforms with intelligent and accessible tools to detect and prevent money laundering and illicit activities on the blockchain, fostering a safer and more trustworthy digital ecosystem.`,
+      `Our Vision: To be the leading AML intelligence solution for Web3, combining the power of blockchain analysis with artificial intelligence to provide proactive protection and real-time alerts on a global scale. This prototype is just the beginning!`,
+      `Thank you for trying AURA! Your security is our priority.`
+    ],
     features: {
       title: 'Key Features',
       security: 'Advanced Security',
@@ -51,19 +52,20 @@ const translations = {
     }
   },
   es: {
-    title: 'Acerca de AURA',
+    title: '¿Qué es AURA?',
     subtitle: '¡Tu Guardián en el Mundo Crypto!',
-    whatIsAura: {
-      title: '¿Qué es AURA?',
-      text: '¡Hola! Somos AURA (Análisis Unificado de Riesgos y Alertas). Nacimos en el ETH Cinco de Mayo Hackathon con una misión clara: hacer que navegar por el mundo de las criptomonedas sea más seguro para todos.',
-      vision: 'Nuestra Visión: Queremos convertirnos en una herramienta inteligente (¡sí, con IA en el futuro!) que te proteja de forma proactiva contra el lavado de dinero y las estafas en el ecosistema blockchain.',
-      thanks: '¡Gracias por probar AURA! Tu seguridad es nuestra prioridad.'
-    },
-    mission: {
-      title: 'Nuestra Misión',
-      text: 'Sabemos que Web3 es emocionante, pero también puede ser riesgoso. ¿Alguna vez te has preguntado si la wallet con la que vas a interactuar tiene fondos de origen dudoso? ¡Ahí es donde entramos nosotros!',
-      whatWeDo: '¿Qué hacemos (en este prototipo)? Analizamos direcciones de wallets buscando conexiones con actividades de riesgo conocidas (como mezcladores o direcciones sancionadas, usando datos simulados en esta versión de prueba). Te damos una señal simple y visual (nuestro semáforo 🟢🟡🔴) para ayudarte a tomar decisiones más informadas antes de hacer una transacción.'
-    },
+    aboutAuraParagraphs: [
+      `¡Hola! Somos AURA (Análisis Unificado de Riesgos y Alertas). Nacimos en el ETH Cinco de Mayo Hackathon con una misión clara: hacer que navegar por el mundo de las criptomonedas sea más seguro para todos.`,
+      `Sabemos que Web3 es emocionante, pero también puede ser riesgoso. ¿Alguna vez te has preguntado si la wallet con la que vas a interactuar tiene fondos de origen dudoso o está vinculada a actividades ilícitas? ¡Ahí es donde entramos nosotros!`,
+      `¿Qué hacemos (en este prototipo)?`,
+      `Analizamos a Fondo: Revisamos la dirección que nos das buscando conexiones con actividades de riesgo. Esto incluye la consulta contra listas de referencia que simulan direcciones bloqueadas o sancionadas por autoridades.`,
+      `Evaluamos la Actividad: No solo miramos listas, también consideramos patrones básicos de interacción de la cuenta que podrían indicar un comportamiento sospechoso.`,
+      `Te Damos una Señal Clara: Combinamos estos factores para generar nuestro semáforo de riesgo (🟢🟡🔴). Una señal visual simple que te indica si el riesgo detectado es Bajo, Medio o Alto, ayudándote a decidir con más información antes de interactuar.`,
+      `(En esta versión de prueba del hackathon, las listas y el análisis de actividad son simplificados/simulados).`,
+      `Nuestra Misión: Empoderar a usuarios y plataformas con herramientas inteligentes y accesibles para detectar y prevenir el lavado de dinero y actividades ilícitas en la blockchain, fomentando un ecosistema digital más seguro y confiable.`,
+      `Nuestra Visión: Ser la solución líder de inteligencia AML para Web3, combinando el poder del análisis blockchain con la inteligencia artificial para ofrecer protección proactiva y alertas en tiempo real a escala global. ¡Este prototipo es solo el comienzo!`,
+      `¡Gracias por probar AURA! Tu seguridad es nuestra prioridad.`
+    ],
     features: {
       title: 'Características Principales',
       security: 'Seguridad Avanzada',
@@ -88,93 +90,65 @@ const translations = {
 function AboutAuraScreen({ language = 'es' }) {
   const t = translations[language];
 
+  // Estructura de los bloques para ES y EN
+  let blocks = [];
+  if (language === 'es') {
+    blocks = [
+      // Primer bloque: primeros dos párrafos
+      [t.aboutAuraParagraphs[0], t.aboutAuraParagraphs[1]],
+      // Segundo bloque: desde '¿Qué hacemos...' hasta antes de 'Nuestra Misión'
+      [t.aboutAuraParagraphs[2], t.aboutAuraParagraphs[3], t.aboutAuraParagraphs[4], t.aboutAuraParagraphs[5], t.aboutAuraParagraphs[6]],
+      // Tercer bloque: Misión
+      [t.aboutAuraParagraphs[7]],
+      // Cuarto bloque: Visión
+      [t.aboutAuraParagraphs[8]],
+      // Quinto bloque: Agradecimiento
+      [t.aboutAuraParagraphs[9]]
+    ];
+  } else if (language === 'en') {
+    blocks = [
+      [t.aboutAuraParagraphs[0], t.aboutAuraParagraphs[1]],
+      [t.aboutAuraParagraphs[2], t.aboutAuraParagraphs[3], t.aboutAuraParagraphs[4], t.aboutAuraParagraphs[5], t.aboutAuraParagraphs[6]],
+      [t.aboutAuraParagraphs[7]],
+      [t.aboutAuraParagraphs[8]],
+      [t.aboutAuraParagraphs[9]]
+    ];
+  }
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box textAlign="center" mb={6}>
         <Typography variant="h3" component="h1" gutterBottom>
           {t.title}
         </Typography>
-        <Typography variant="h5" color="text.secondary">
-          {t.subtitle}
-        </Typography>
+        {t.subtitle && (
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mt: -2, mb: 2 }}>
+            {t.subtitle}
+          </Typography>
+        )}
       </Box>
 
       <Grid container spacing={4}>
-        {/* What is AURA Section */}
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" gutterBottom align="center">
-                {t.whatIsAura.title}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                paragraph 
-                align="justify"
-                sx={{ 
-                  textIndent: '2em',
-                  lineHeight: 1.8
-                }}
-              >
-                {t.whatIsAura.text}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                paragraph 
-                align="justify"
-                sx={{ 
-                  textIndent: '2em',
-                  lineHeight: 1.8
-                }}
-              >
-                {t.whatIsAura.vision}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                paragraph 
-                align="justify"
-                sx={{ 
-                  textIndent: '2em',
-                  lineHeight: 1.8
-                }}
-              >
-                {t.whatIsAura.thanks}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Mission Section */}
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" gutterBottom align="center">
-                {t.mission.title}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                paragraph 
-                align="justify"
-                sx={{ 
-                  textIndent: '2em',
-                  lineHeight: 1.8
-                }}
-              >
-                {t.mission.text}
-              </Typography>
-              <Typography 
-                variant="body1"
-                align="justify"
-                sx={{ 
-                  textIndent: '2em',
-                  lineHeight: 1.8
-                }}
-              >
-                {t.mission.whatWeDo}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        {/* Bloques principales de información */}
+        {blocks.map((block, i) => (
+          <Grid item xs={12} key={i}>
+            <Card sx={{ boxShadow: 3, background: '#f8fafc' }}>
+              <CardContent>
+                {block.map((paragraph, j) => (
+                  <Typography
+                    key={j}
+                    variant="body1"
+                    paragraph
+                    align="justify"
+                    sx={{ textIndent: '2em', lineHeight: 1.8 }}
+                  >
+                    {paragraph}
+                  </Typography>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
 
         {/* Features Section */}
         <Grid item xs={12}>
