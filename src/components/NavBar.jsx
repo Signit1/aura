@@ -16,7 +16,7 @@ import logoAura from '../assets/logoAura.png';
 const menuTranslations = {
   en: {
     products: 'Products',
-    pricing: 'Pricing',
+    pricing: 'Subscription',
     blog: 'Blog',
     profile: 'Profile',
     account: 'Account',
@@ -28,7 +28,7 @@ const menuTranslations = {
   },
   es: {
     products: 'Productos',
-    pricing: 'Precios',
+    pricing: 'Suscripción',
     blog: 'Blog',
     profile: 'Perfil',
     account: 'Cuenta',

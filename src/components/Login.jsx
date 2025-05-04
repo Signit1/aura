@@ -6,7 +6,10 @@ import {
   Button,
   Typography,
   Paper,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import LanguageIcon from '@mui/icons-material/Language';
 import logoAuraBlack from '../assets/logoAuraBlack.png';
 
 const translations = {
@@ -17,7 +20,8 @@ const translations = {
     password: 'Password',
     login: 'Log In',
     userRequired: 'Username is required',
-    passwordRequired: 'Password is required'
+    passwordRequired: 'Password is required',
+    switchLanguage: 'Switch to Spanish'
   },
   es: {
     welcome: 'Bienvenido',
@@ -26,15 +30,20 @@ const translations = {
     password: 'Contraseña',
     login: 'Iniciar Sesión',
     userRequired: 'Usuario es requerido',
-    passwordRequired: 'Contraseña es requerida'
+    passwordRequired: 'Contraseña es requerida',
+    switchLanguage: 'Cambiar a Inglés'
   }
 };
 
-function Login({ onLogin, language = 'es' }) {
+function Login({ onLogin, language = 'es', onLanguageChange }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const t = translations[language];
+
+  const handleLanguageToggle = () => {
+    onLanguageChange(language === 'en' ? 'es' : 'en');
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,7 +62,7 @@ function Login({ onLogin, language = 'es' }) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <Box
         sx={{
           minHeight: '100vh',
@@ -61,12 +70,15 @@ function Login({ onLogin, language = 'es' }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          px: { xs: 2, sm: 4 },
         }}
       >
         <Paper
           elevation={3}
           sx={{
-            p: 4,
+            width: '100%',
+            maxWidth: { xs: '100%', sm: 450 },
+            p: { xs: 3, sm: 4 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -74,24 +86,72 @@ function Login({ onLogin, language = 'es' }) {
             borderRadius: 2,
           }}
         >
+          <Box 
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+            }}
+          >
+            <Tooltip title={t.switchLanguage}>
+              <IconButton 
+                onClick={handleLanguageToggle}
+                sx={{ 
+                  color: 'text.secondary',
+                  '&:hover': {
+                    color: 'primary.main',
+                  }
+                }}
+              >
+                <LanguageIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          
           <img 
             src={logoAuraBlack} 
             alt="Aura Logo" 
             style={{ 
-              width: 400,
-              marginBottom: 40,
+              width: '100%',
+              maxWidth: 400,
+              height: 'auto',
+              marginBottom: '8%',
             }} 
           />
           
-          <Typography component="h1" variant="h4" sx={{ mb: 2, textAlign: 'center' }}>
+          <Typography 
+            component="h1" 
+            variant="h4" 
+            sx={{ 
+              mb: 2, 
+              textAlign: 'center',
+              fontSize: { xs: '1.8rem', sm: '2.125rem' }
+            }}
+          >
             {t.welcome}
           </Typography>
           
-          <Typography variant="subtitle1" sx={{ mb: 4, textAlign: 'center', color: 'text.secondary' }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              mb: 4, 
+              textAlign: 'center', 
+              color: 'text.secondary',
+              px: { xs: 1, sm: 2 },
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}
+          >
             {t.subtitle}
           </Typography>
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ 
+              width: '100%',
+              mt: { xs: 2, sm: 3 }
+            }}
+          >
             <TextField
               margin="normal"
               required
@@ -103,6 +163,9 @@ function Login({ onLogin, language = 'es' }) {
               onChange={(e) => setUsername(e.target.value)}
               error={!!errors.username}
               helperText={errors.username}
+              sx={{
+                mb: { xs: 2, sm: 3 }
+              }}
             />
             
             <TextField
@@ -116,14 +179,22 @@ function Login({ onLogin, language = 'es' }) {
               onChange={(e) => setPassword(e.target.value)}
               error={!!errors.password}
               helperText={errors.password}
+              sx={{
+                mb: { xs: 2, sm: 3 }
+              }}
             />
 
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
               size="large"
+              sx={{ 
+                mt: { xs: 2, sm: 3 },
+                mb: { xs: 2, sm: 2 },
+                py: { xs: 1.5, sm: 2 },
+                fontSize: { xs: '1rem', sm: '1.1rem' }
+              }}
             >
               {t.login}
             </Button>

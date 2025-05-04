@@ -140,7 +140,7 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} language={language} />;
+    return <Login onLogin={handleLogin} language={language} onLanguageChange={setLanguage} />;
   }
 
   return (
