@@ -155,12 +155,6 @@ Si deseas ejecutar AURA en tu máquina local:
     ```
 5.  Abre tu navegador en `http://localhost:5173` (o el puerto que indique Vite).
 
-## Equipo
-
-*   **[Tu Nombre Completo]** - [Tu Rol Principal] - ([Tu GitHub](enlace), [Tu Twitter](enlace), [Tu LinkedIn](enlace))
-*   **[Nombre Completo Compañero 1]** - [Rol] - (Enlaces)
-*   *...(Añade a todos los miembros del equipo)...*
-
 ## Tracks del Hackathon
 
 Este proyecto participa en los siguientes tracks del ETH Cinco de Mayo Hackathon:
