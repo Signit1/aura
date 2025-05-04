@@ -52,6 +52,12 @@ const translations = {
   }
 };
 
+const MXNB_TOKEN_ADDRESS = "0x82B9e52b26A2954E113F94Ff26647754d5a4247D";
+const ERC20_ABI = [
+  "function approve(address spender, uint256 amount) public returns (bool)",
+  "function allowance(address owner, address spender) public view returns (uint256)"
+];
+
 function SubscriptionScreen({ language = 'es', walletAddress: walletAddressProp, contractAddress }) {
   const [isLoading, setIsLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -110,19 +116,28 @@ function SubscriptionScreen({ language = 'es', walletAddress: walletAddressProp,
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, contractABI, signer);
-      let value;
+      const mxnb = new ethers.Contract(MXNB_TOKEN_ADDRESS, ERC20_ABI, signer);
+      const decimals = 6;
+      let price;
       let planTypeNum;
       if (planType === 'monthly') {
-        value = ethers.utils.parseEther('0.00001');
+        price = 10000000
         planTypeNum = 1;
       } else if (planType === 'annual') {
-        value = ethers.utils.parseEther('0.0001');
+        price = 1000000
         planTypeNum = 2;
       } else {
         throw new Error('Invalid plan type');
       }
+      // Check allowance
+      const allowance = await mxnb.allowance(walletAddress, contractAddress);
+      console.log("allowance", allowance)
+      if (allowance.lt(price)) {
+        const approveTx = await mxnb.approve(contractAddress, price);
+        await approveTx.wait();
+      }
       // Call subscribe
-      const tx = await contract.subscribe(planTypeNum, { value });
+      const tx = await contract.subscribe(planTypeNum);
       await tx.wait();
       setAlertMessage(t.success);
       setAlertSeverity('success');
